@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Recetas Chateau</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase SDK script -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyCst_sQ3u3K3B6Hz5xS2kIQrQrUVQTKuy4",
+      authDomain: "recetas-chateau.firebaseapp.com",
+      projectId: "recetas-chateau",
+      storageBucket: "recetas-chateau.firebasestorage.app",
+      messagingSenderId: "789269570020",
+      appId: "1:789269570020:web:fc4b9a3ef8458b8f81e7f1",
+      measurementId: "G-VFS2QTV4T9"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+
+</head>
+<body>
+  <header class="app-header">
+    <h1>🍳 Recetas Chateau</h1>
+
+    <div class="auth-bar">
+      <div id="authLoggedOut">
+        <input type="email" id="authEmail" placeholder="email" />
+        <input type="password" id="authPassword" placeholder="password" />
+        <button id="authLoginBtn">Log in</button>
+        <button id="authRegisterBtn">Sign up</button>
+      </div>
+      <div id="authLoggedIn" class="hidden">
+        <span id="authUserEmail"></span>
+        <button id="authLogoutBtn">Log out</button>
+      </div>
+
+    <button id="addRecipeBtn">+ Add / Import Recipe</button>
+    </div>
+  </header>
+
+  <main class="app-layout">
+    <aside class="sidebar">
+      <div class="search-block">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search by title or ingredients..."
+        />
+      </div>
+
+      <div class="tag-block">
+        <h3>Tags</h3>
+        <div id="tagList" class="tag-list"></div>
+      </div>
+
+      <div class="import-hint">
+        <p>Tip: Use the Add / Import button to:</p>
+        <ul>
+          <li>Paste website URLs</li>
+          <li>Paste text from Instagram / TikTok / Notes</li>
+          <li>Upload .txt / .md files</li>
+        </ul>
+      </div>
+    </aside>
+
+    <section class="content">
+      <div id="recipeList" class="recipe-list"></div>
+      <div id="emptyState" class="empty-state">
+        No recipes yet. Click <strong>“+ Add / Import Recipe”</strong> to get started.
+      </div>
+
+      <article id="recipeDetail" class="recipe-detail hidden"></article>
+    </section>
+  </main>
+
+  <!-- Modal for Add / Import -->
+  <div id="modalBackdrop" class="modal-backdrop hidden">
+    <div class="modal">
+      <header class="modal-header">
+        <h2 id="modalTitle">Add / Import Recipe</h2>
+        <button id="closeModalBtn" class="icon-btn">&times;</button>
+      </header>
+
+      <div class="modal-tabs">
+        <button class="tab-btn active" data-tab="manualTab">Manual</button>
+        <button class="tab-btn" data-tab="urlTab">From URL</button>
+        <button class="tab-btn" data-tab="textTab">From Text</button>
+        <button class="tab-btn" data-tab="fileTab">From File</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Manual tab -->
+        <div id="manualTab" class="tab-content active">
+          <form id="manualForm" class="form">
+            <input
+              type="text"
+              id="manualTitle"
+              placeholder="Title"
+              required
+            />
+            <input
+              type="text"
+              id="manualSource"
+              placeholder="Source (optional, e.g. 'Grandma', 'Own recipe')"
+            />
+            <input
+              type="text"
+              id="manualTags"
+              placeholder="Tags (comma separated, e.g. pasta, quick, vegan)"
+            />
+            <label>
+              Ingredients
+              <textarea
+                id="manualIngredients"
+                rows="5"
+                placeholder="- 200 g pasta
+- 2 tbsp olive oil
+- 1 clove garlic"
+              ></textarea>
+            </label>
+            <label>
+              Instructions
+              <textarea
+                id="manualInstructions"
+                rows="7"
+                placeholder="1. Boil water.
+2. Cook pasta until al dente."
+              ></textarea>
+            </label>
+            <!-- NEW: Cook notes -->
+            <label>
+              Cook notes
+              <textarea
+                id="manualNotes"
+                rows="4"
+                placeholder="What would you change next time? Times, brands, tricks..."
+                ></textarea>
+            </label>
+            <!-- NEW: Image upload -->
+            <label>
+              Photo (optional)
+              <input type="file" id="manualImage" accept="image/*" />
+            </label>
+            <button type="submit" class="primary-btn">Save Recipe</button>
+          </form>
+        </div>
+
+        <!-- URL tab -->
+        <div id="urlTab" class="tab-content">
+          <form id="urlForm" class="form">
+            <input
+              type="url"
+              id="urlInput"
+              placeholder="https://example.com/my-recipe"
+              required
+            />
+            <button type="button" id="fetchUrlBtn" class="secondary-btn">
+              Try to fetch recipe from URL
+            </button>
+
+            <p class="hint">
+              This tries to read recipe data from sites that allow it.
+              If it fails (many sites block this), copy/paste the text
+              into the “From Text” tab instead.
+            </p>
+
+            <input
+              type="text"
+              id="urlTitle"
+              placeholder="Title (editable)"
+            />
+            <input
+              type="text"
+              id="urlSource"
+              placeholder="Source (e.g. website name)"
+            />
+            <input
+              type="text"
+              id="urlTags"
+              placeholder="Tags (comma separated)"
+            />
+            <label>
+              Ingredients
+              <textarea id="urlIngredients" rows="5"></textarea>
+            </label>
+            <label>
+              Instructions
+              <textarea id="urlInstructions" rows="7"></textarea>
+            </label>
+            <!-- NEW: Cook notes -->
+            <label>
+              Cook notes
+              <textarea id="urlNotes" rows="4"
+              placeholder="Notes for when you cook this recipe."
+              ></textarea>
+            </label>
+            <button type="submit" class="primary-btn">Save Recipe</button>
+          </form>
+        </div>
+
+        <!-- Text tab -->
+        <div id="textTab" class="tab-content">
+          <form id="textForm" class="form">
+            <p class="hint">
+              Paste from Instagram / TikTok / Apple Notes / WhatsApp, etc.
+            </p>
+            <input
+              type="text"
+              id="textTitle"
+              placeholder="Title (e.g. 'TikTok – Lemon Pasta')"
+            />
+            <input
+              type="text"
+              id="textSource"
+              placeholder="Source (e.g. 'Instagram @chef', 'Apple Notes')"
+            />
+            <input
+              type="text"
+              id="textTags"
+              placeholder="Tags (comma separated)"
+            />
+            <label>
+              Full text
+              <textarea
+                id="textBody"
+                rows="10"
+                placeholder="Paste the recipe text here..."
+              ></textarea>
+            </label>
+             <!-- NEW: Cook notes -->
+            <label>
+              Cook notes
+              <textarea
+                id="textNotes"
+                rows="4"
+                placeholder="Your notes about this recipe."
+              ></textarea>
+            </label>
+            <p class="hint">
+              You can later edit and split ingredients/instructions if you want.
+            </p>
+            <button type="submit" class="primary-btn">Save Recipe</button>
+          </form>
+        </div>
+
+        <!-- File tab -->
+        <div id="fileTab" class="tab-content">
+          <form id="fileForm" class="form">
+            <p class="hint">
+              Import one or more <code>.txt</code> or <code>.md</code> files.
+              Each file becomes one recipe. Title = filename.
+            </p>
+            <input
+              type="file"
+              id="fileInput"
+              accept=".txt,.md,text/plain"
+              multiple
+            />
+            <button type="submit" class="primary-btn">
+              Import Selected Files
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: #f4f4f4;
+  color: #222;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Authentication bar */
+.auth-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.auth-bar input {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+#authUserEmail {
+  font-size: 0.8rem;
+  color: #555;
+}
+
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - 54px);
+}
+
+@media (max-width: 800px) {
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+}
+
+.sidebar {
+  background: #fafafa;
+  border-right: 1px solid #ddd;
+  padding: 1rem;
+}
+
+.search-block input {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+.tag-block {
+  margin-top: 1rem;
+}
+
+.tag-block h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.tag-pill {
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: #e0e0e0;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.tag-pill.active {
+  background: #222;
+  color: white;
+}
+
+.import-hint {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.import-hint ul {
+  margin: 0.3rem 0 0 1rem;
+  padding: 0;
+}
+
+/* Buttons */
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+.primary-btn,
+.secondary-btn,
+#addRecipeBtn {
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+#addRecipeBtn,
+.primary-btn {
+  background: #222;
+  color: #fff;
+}
+
+#addRecipeBtn:hover,
+.primary-btn:hover {
+  opacity: 0.9;
+}
+
+.secondary-btn {
+  background: #e4e4e4;
+  color: #222;
+}
+
+.secondary-btn:hover {
+  background: #d2d2d2;
+}
+
+.icon-btn {
+  background: transparent;
+  font-size: 1.2rem;
+}
+
+/* Main content */
+
+.content {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recipe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.recipe-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: box-shadow 0.1s ease, transform 0.05s ease;
+}
+
+.recipe-card:hover {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.recipe-card-title {
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.recipe-card-meta {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.recipe-card-tags {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.recipe-card-tag {
+  background: #f0f0f0;
+  border-radius: 999px;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.75rem;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  margin-top: 2rem;
+  text-align: center;
+  color: #777;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Detail */
+
+.recipe-detail {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  border: 1px solid #e0e0e0;
+  align-self: start;
+}
+
+.recipe-detail header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.recipe-detail h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.recipe-detail-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.recipe-detail-tags {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.recipe-detail-section {
+  margin-top: 0.8rem;
+}
+
+.recipe-detail-section h3 {
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+}
+
+.recipe-detail-section pre {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+/* Tabs: show only the active tab */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Modal */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  z-index: 20;
+}
+
+.modal {
+  background: #ffffff;
+  border-radius: 10px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.modal-tabs {
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  background: transparent;
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-btn.active {
+  border-bottom-color: #222;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 0.8rem 0.9rem 0.9rem;
+  overflow: auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form input[type="text"],
+.form input[type="url"],
+.form textarea {
+  width: 100%;
+  padding: 0.4rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+}
+
+.form textarea {
+  resize: vertical;
+}
+
+.form label {
+  font-size: 0.85rem;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.recipe-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.danger-btn {
+  background: #d9534f;
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+.danger-btn:hover {
+  opacity: 0.9;
+}
+
+.recipe-image {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 0.7rem;
+}
