@@ -6,6 +6,22 @@ console.log("app.js loaded");
 console.log("firebase present?", typeof firebase !== "undefined");
 console.log("firebase.apps before init in app.js:", firebase.apps);
 
+// Ensure Firebase app is initialized (defensive)
+if (!firebase.apps || firebase.apps.length === 0) {
+  // SAME config used in index.html
+  const firebaseConfig = {
+      apiKey: "AIzaSyCst_sQ3u3K3B6Hz5xS2kIQrQrUVQTKuy4",
+      authDomain: "recetas-chateau.firebaseapp.com",
+      projectId: "recetas-chateau",
+      storageBucket: "recetas-chateau.firebasestorage.app",
+      messagingSenderId: "789269570020",
+      appId: "1:789269570020:web:fc4b9a3ef8458b8f81e7f1",
+      measurementId: "G-VFS2QTV4T9"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  console.log("Initialized Firebase app from app.js");
+}
 
 // Firebase handles
 const auth = firebase.auth();
