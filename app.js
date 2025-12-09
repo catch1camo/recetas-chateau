@@ -13,7 +13,7 @@ if (!firebase.apps || firebase.apps.length === 0) {
       apiKey: "AIzaSyCst_sQ3u3K3B6Hz5xS2kIQrQrUVQTKuy4",
       authDomain: "recetas-chateau.firebaseapp.com",
       projectId: "recetas-chateau",
-      storageBucket: "recetas-chateau.firebasestorage.app",
+      storageBucket: "recetas-chateau.appspot.com",
       messagingSenderId: "789269570020",
       appId: "1:789269570020:web:fc4b9a3ef8458b8f81e7f1",
       measurementId: "G-VFS2QTV4T9"
