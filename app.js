@@ -1,4 +1,4 @@
-// Simple recipe app using Firebase
+// Simple recipe app BASE64 img
 
 // Optional debug 
 console.log("app.js loaded");
@@ -26,7 +26,7 @@ if (!firebase.apps || firebase.apps.length === 0) {
 // Firebase handles
 const auth = firebase.auth();
 const db = firebase.firestore();
-const storage = firebase.storage();
+// const storage = firebase.storage(); // not using firebase storage for now
 
 let recipes = [];
 let activeRecipeId = null;
@@ -250,30 +250,7 @@ async function deleteRecipeFromCloud(recipeId) {
     .doc(recipeId);
 
   await docRef.delete();
-
-  // Also delete image from storage if exists
-  try {
-    const imgRef = storage
-      .ref()
-      .child(`recipes/${currentUser.uid}/${recipeId}.jpg`);
-    await imgRef.delete();
-  } catch (e) {
-    // ignore if no image
-  }
 }
-
-async function uploadImageForRecipe(file, recipeId) {
-  if (!currentUser || !file) return null;
-
-  const imgRef = storage
-    .ref()
-    .child(`recipes/${currentUser.uid}/${recipeId}.jpg`);
-
-  await imgRef.put(file);
-  const url = await imgRef.getDownloadURL();
-  return url;
-}
-
 
 /**
  * Try to automatically split a big block of text into
@@ -365,6 +342,52 @@ function autoSplitRecipeText(text) {
 
   return { ingredients, instructions };
 }
+
+
+/**
+ * Resize and compress an image file before saving.
+ * Returns a Promise that resolves to a base64 data URL.
+ *
+ * @param {File} file - the uploaded image
+ * @param {number} maxWidth - target max width (default 800px)
+ * @param {number} quality - JPEG compression (0–1)
+ */
+function resizeImageFile(file, maxWidth = 800, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        const ratio = img.width / img.height;
+        if (img.width > maxWidth) {
+          canvas.width = maxWidth;
+          canvas.height = maxWidth / ratio;
+        } else {
+          canvas.width = img.width;
+          canvas.height = img.height;
+        }
+
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // Convert to JPEG base64
+        const dataUrl = canvas.toDataURL("image/jpeg", quality);
+        resolve(dataUrl);
+      };
+
+      img.onerror = () => reject(new Error("Error loading image"));
+      img.src = event.target.result;
+    };
+
+    reader.onerror = () => reject(new Error("Error reading file"));
+    reader.readAsDataURL(file);
+  });
+}
+
+
 
 // Render functions
 function render() {
@@ -807,55 +830,69 @@ manualForm.addEventListener("submit", async (e) => {
   const editId = manualForm.dataset.editId;
   const file = manualImageEl && manualImageEl.files[0];
 
-  let recipe;
+  // Helper to create/update the recipe and save it
+  const saveRecipeObject = async (imageValue) => {
+    let recipe;
 
-  if (editId) {
-    const idx = recipes.findIndex((r) => r.id === editId);
-    if (idx >= 0) {
+    if (editId) {
+      const idx = recipes.findIndex((r) => r.id === editId);
+      if (idx >= 0) {
+        const existing = recipes[idx];
+        recipe = {
+          ...existing,
+          title: title || "(Untitled recipe)",
+          source,
+          tags,
+          ingredientsText,
+          instructionsText,
+          cookNotesText,
+          // if imageValue is null, keep existing image
+          image: imageValue !== null ? imageValue : existing.image || "",
+          updatedAt: now,
+        };
+        recipes[idx] = recipe;
+      }
+    } else {
       recipe = {
-        ...recipes[idx],
+        id: null, // will be set by Firestore
         title: title || "(Untitled recipe)",
         source,
         tags,
         ingredientsText,
         instructionsText,
         cookNotesText,
+        image: imageValue || "",  // base64 data URL or empty string
+        body: "",
+        createdAt: now,
         updatedAt: now,
       };
-      recipes[idx] = recipe;
+      recipes.push(recipe);
+    }
+
+    await saveRecipeToCloud(recipe);
+    activeRecipeId = recipe.id;
+    render();
+    closeModal();
+  };
+
+  // If a new image file was selected, resize/compress and save
+  if (file) {
+    try {
+      // You can tweak maxWidth/quality here if you want
+      const dataUrl = await resizeImageFile(file, 900, 0.75);
+      await saveRecipeObject(dataUrl);
+    } catch (err) {
+      console.error("Error resizing/saving recipe image:", err);
+      alert("Error processing image: " + err.message);
+      // fallback: save without changing/adding image
+      await saveRecipeObject(null);
     }
   } else {
-    recipe = {
-      id: null, // will be set after Firestore add
-      title: title || "(Untitled recipe)",
-      source,
-      tags,
-      ingredientsText,
-      instructionsText,
-      cookNotesText,
-      image: "", // will set after upload
-      body: "",
-      createdAt: now,
-      updatedAt: now,
-    };
-    recipes.push(recipe);
+    // No new image selected → keep existing (edit) or empty (new)
+    await saveRecipeObject(null);
   }
-
-  // First save text to Firestore (so we have recipe.id)
-  await saveRecipeToCloud(recipe);
-
-  // Then upload image if any
-  if (file) {
-    const imageUrl = await uploadImageForRecipe(file, recipe.id);
-    recipe.image = imageUrl;
-    recipe.updatedAt = Date.now();
-    await saveRecipeToCloud(recipe);
-  }
-
-  activeRecipeId = recipe.id;
-  render();
-  closeModal();
 });
+
 
 // URL fetch button
 fetchUrlBtn.addEventListener("click", () => {
