@@ -509,16 +509,18 @@ function renderTagList() {
 function renderDetail() {
   if (!activeRecipeId) {
     recipeDetailEl.classList.add("hidden");
-    recipeDetailEl.innerHTML = "";
+    recipeDetailEl.classList.remove("sheet-open"); // NEW U/X
     document.body.classList.remove("detail-open"); // NEW U/X
+    recipeDetailEl.innerHTML = "";
     return;
   }
 
   const recipe = recipes.find((r) => r.id === activeRecipeId);
   if (!recipe) {
     recipeDetailEl.classList.add("hidden");
-    recipeDetailEl.innerHTML = "";
+    recipeDetailEl.classList.remove("sheet-open"); // NEW U/X
     document.body.classList.remove("detail-open"); // NEW U/X
+    recipeDetailEl.innerHTML = "";
     return;
   }
 
@@ -526,6 +528,18 @@ function renderDetail() {
 
   recipeDetailEl.classList.remove("hidden");
   recipeDetailEl.innerHTML = "";
+
+  // NEW U/X Close button (visible only on mobile via CSS)
+  const closeBtn = document.createElement("button");
+  closeBtn.className = "detail-close-btn";
+  closeBtn.textContent = "Close";
+  closeBtn.addEventListener("click", () => {
+    activeRecipeId = null;
+    recipeDetailEl.classList.add("hidden");
+    recipeDetailEl.classList.remove("sheet-open");
+    document.body.classList.remove("detail-open");
+  });
+  recipeDetailEl.appendChild(closeBtn);
 
   const header = document.createElement("header");
 
@@ -658,6 +672,16 @@ if (recipe.cookNotesText) {
     section.appendChild(pre);
     recipeDetailEl.appendChild(section);
   }
+
+  // NEW U/X Mobile: open as a slide-up bottom sheet
+  if (window.innerWidth <= 768) {
+    recipeDetailEl.classList.add("sheet-open");
+    document.body.classList.add("detail-open");
+  } else {
+    recipeDetailEl.classList.remove("sheet-open");
+    document.body.classList.remove("detail-open");
+  }
+
 }
 
 // Modal helpers
