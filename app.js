@@ -510,6 +510,7 @@ function renderDetail() {
   if (!activeRecipeId) {
     recipeDetailEl.classList.add("hidden");
     recipeDetailEl.innerHTML = "";
+    document.body.classList.remove("detail-open"); // NEW U/X
     return;
   }
 
@@ -517,8 +518,11 @@ function renderDetail() {
   if (!recipe) {
     recipeDetailEl.classList.add("hidden");
     recipeDetailEl.innerHTML = "";
+    document.body.classList.remove("detail-open"); // NEW U/X
     return;
   }
+
+  document.body.classList.add("detail-open"); // NEW U/X
 
   recipeDetailEl.classList.remove("hidden");
   recipeDetailEl.innerHTML = "";
@@ -577,9 +581,19 @@ function renderDetail() {
     render();
   });
 
+  // NEW U/X close btn
+  const closeDetailBtn = document.createElement("button");
+  closeDetailBtn.className = "secondary-btn mobile-only-close";
+  closeDetailBtn.textContent = "Close";
+  
+  closeDetailBtn.addEventListener("click", () => {
+    activeRecipeId = null;
+    render(); // this will also remove body.detail-open via renderDetail
+  });
 
   actions.appendChild(editBtn);
   actions.appendChild(deleteBtn);
+  actions.appendChild(closeDetailBtn); // NEW U/X
 
   header.appendChild(titleBlock);
   header.appendChild(actions);
