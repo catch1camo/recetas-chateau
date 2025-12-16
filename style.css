@@ -17,7 +17,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
-  background: #ffffff;
+  background: #858786;
   border-bottom: 1px solid #ddd;
   position: sticky;
   top: 0;
@@ -70,7 +70,7 @@ body {
 }
 
 .sidebar {
-  background: #fafafa;
+  background: #e4e4e4;
   border-right: 1px solid #ddd;
   padding: 1rem;
 }
@@ -183,6 +183,11 @@ button {
   }
 }
 
+/* Mobile-only: show the magnifier tab button */
+.sidebar-toggle-btn {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .mobile-only-close {
     display: inline-block;
@@ -191,6 +196,47 @@ button {
   .app-layout {
     display: block;
   }
+
+/* Start sidebar toggle */
+.sidebar-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0.45rem 0.7rem;
+    font-size: 1rem;
+    background: #e4e4e4;
+    color: #222;
+  }
+
+  /* Sidebar becomes an off-canvas panel */
+  .sidebar {
+    position: fixed;
+    top: 54px;               /* below header */
+    left: 0;
+    height: calc(100vh - 54px);
+    width: min(85vw, 320px);
+    background: #fafafa;
+    border-right: 1px solid #ddd;
+    z-index: 1100;
+    transform: translateX(-105%);
+    transition: transform 0.25s ease-out;
+    overflow-y: auto;
+  }
+
+  body.sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  /* Backdrop behind panels */
+  .panel-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 1050;
+  }
+
+/* Ends sidebar toggle */
 
   /* Turn the detail panel into a full-screen overlay on mobile */
   #recipeDetail {
@@ -206,6 +252,7 @@ button {
     overflow-y: auto;           /* 🔹 THIS makes long recipes scrollable */
     z-index: 1000;
     transition: bottom 0.25s ease-out;
+    -webkit-overflow-scrolling: touch;
   }
 
  /* When JS adds .sheet-open → slide up */

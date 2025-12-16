@@ -105,6 +105,10 @@ const recipeDetailEl = document.getElementById("recipeDetail");
 const emptyStateEl = document.getElementById("emptyState");
 const searchInputEl = document.getElementById("searchInput");
 const tagListEl = document.getElementById("tagList");
+// DOM from toggle sidebar
+const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
+const panelBackdrop = document.getElementById("panelBackdrop");
+const sidebarEl = document.querySelector(".sidebar");
 
 // Manual extra fields Cook Notes and Image
 const manualNotesEl = document.getElementById("manualNotes");
@@ -473,6 +477,13 @@ function renderRecipeList() {
       card.addEventListener("click", () => {
         activeRecipeId = recipe.id;
         renderDetail();
+
+        // On mobile, open the sheet + show backdrop
+        if (window.innerWidth <= 768) {
+        openDetailSheet();
+        // Also close sidebar if it’s open
+        document.body.classList.remove("sidebar-open");
+  }
       });
 
       recipeListEl.appendChild(card);
@@ -678,14 +689,21 @@ if (recipe.cookNotesText) {
     recipeDetailEl.appendChild(section);
   }
 
+  // This block comented out Now is done via helper
   // NEW U/X Mobile: open as a slide-up bottom sheet
-  if (window.innerWidth <= 768) {
-    recipeDetailEl.classList.add("sheet-open");
-    document.body.classList.add("detail-open");
-  } else {
-    recipeDetailEl.classList.remove("sheet-open");
-    document.body.classList.remove("detail-open");
-  }
+  //if (window.innerWidth <= 768) {
+  //  recipeDetailEl.classList.add("sheet-open");
+  //  document.body.classList.add("detail-open");
+  //} else {
+  //  recipeDetailEl.classList.remove("sheet-open");
+  //  document.body.classList.remove("detail-open");
+  //}
+
+  closeBtn.addEventListener("click", () => {
+    activeRecipeId = null;
+    render();
+    closePanels();
+  });
 
 }
 
@@ -835,6 +853,41 @@ async function handleFetchUrl() {
     );
   }
 }
+
+
+// Sidebar toggle logic
+
+function closePanels() {
+  document.body.classList.remove("sidebar-open");
+  document.body.classList.remove("detail-open");
+  recipeDetailEl.classList.remove("sheet-open");
+  panelBackdrop.classList.add("hidden");
+}
+
+function openSidebar() {
+  document.body.classList.add("sidebar-open");
+  panelBackdrop.classList.remove("hidden");
+}
+
+function openDetailSheet() {
+  document.body.classList.add("detail-open");
+  recipeDetailEl.classList.add("sheet-open");
+  panelBackdrop.classList.remove("hidden");
+}
+
+// Toggle sidebar button (mobile)
+sidebarToggleBtn?.addEventListener("click", () => {
+  const isOpen = document.body.classList.contains("sidebar-open");
+  if (isOpen) {
+    closePanels();
+  } else {
+    openSidebar();
+  }
+});
+
+// Backdrop closes everything
+panelBackdrop?.addEventListener("click", closePanels);
+
 
 // Event listeners
 
