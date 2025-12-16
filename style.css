@@ -198,7 +198,7 @@ button {
     /* Smoother animation */
     transform: translateY(16px);
     opacity: 0;
-    transition: bottom 0.5s ease-out, transform 0.5s ease-out, opacity 0.2s ease-out;
+    transition: bottom 0.75s ease-out, transform 0.75s ease-out, opacity 0.2s ease-out;
 
     -webkit-overflow-scrolling: touch; /* smoother iOS scroll */
     
