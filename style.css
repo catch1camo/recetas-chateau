@@ -80,7 +80,7 @@ body {
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 0.95rem;
+  font-size: 0.90rem;
 }
 
 .tag-block {
@@ -195,8 +195,8 @@ button {
   /* Turn the detail panel into a full-screen overlay on mobile */
   #recipeDetail {
     
-    /* Smoother animation */
-    transform: translateY(16px);
+    /* Smoother animation 
+    transform: translateY(16px);*/
     opacity: 0;
     transition: bottom 0.75s ease-out, transform 0.75s ease-out, opacity 0.2s ease-out;
 
@@ -295,6 +295,10 @@ button {
   border-radius: 999px;
   padding: 0.1rem 0.4rem;
   font-size: 0.75rem;
+}
+
+.recipe-card.active {
+  border-color: #222;
 }
 
 .empty-state {
