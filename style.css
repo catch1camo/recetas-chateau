@@ -312,12 +312,19 @@ button {
 
 /* NEW U/X – desktop behaviour for the detail panel */
 @media (min-width: 769px) {
-  #recipeDetail {
+  /*#recipeDetail {
     position: static;
     max-height: none;
     overflow: visible;
     box-shadow: none;
     border-radius: 0;
+  } */
+  #recipeDetail {
+    position: sticky;
+    top: 64px; /* approx header height; tweak if needed */
+    max-height: calc(100vh - 64px - 1rem);
+    overflow-y: auto; /* long recipes scroll inside the panel */
+     border-radius: 0;
   }
 }
 
@@ -332,15 +339,6 @@ button {
   padding: 0.9rem 1rem;
   border: 1px solid #e0e0e0;
   align-self: start;
-}
-
-@media (min-width: 901px) {
-  #recipeDetail {
-    position: sticky;
-    top: 64px; /* approx header height; tweak if needed */
-    max-height: calc(100vh - 64px - 1rem);
-    overflow-y: auto; /* long recipes scroll inside the panel */
-  }
 }
 
 .recipe-detail header {
