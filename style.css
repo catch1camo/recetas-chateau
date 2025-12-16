@@ -206,6 +206,7 @@ button {
     overflow-y: auto;           /* 🔹 THIS makes long recipes scrollable */
     z-index: 1000;
     transition: bottom 0.25s ease-out;
+    -webkit-overflow-scrolling: touch; /* smoother iOS scroll */
   }
 
  /* When JS adds .sheet-open → slide up */
