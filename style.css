@@ -205,13 +205,22 @@ button {
     padding: 0.75rem 1rem 1rem;
     overflow-y: auto;           /* 🔹 THIS makes long recipes scrollable */
     z-index: 1000;
-    transition: bottom 0.25s ease-out;
+    /* transition: bottom 0.25s ease-out; */
+    /* Smoother animation */
+    transform: translateY(16px);
+    opacity: 0;
+    transition: bottom 0.25s ease-out, transform 0.25s ease-out, opacity 0.2s ease-out;
+  
+
     -webkit-overflow-scrolling: touch; /* smoother iOS scroll */
   }
 
  /* When JS adds .sheet-open → slide up */
   #recipeDetail.sheet-open {
     bottom: 0;
+    /* Smoother animation */
+    transform: translateY(0);
+    opacity: 1;
   }
 
   /* Show the close button on mobile */
