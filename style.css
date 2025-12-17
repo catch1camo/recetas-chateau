@@ -6,6 +6,7 @@
 
 body {
   margin: 0;
+  overflow-x: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
   background: #f4f4f4;
@@ -198,7 +199,7 @@ button {
     /* Smoother animation 
     transform: translateY(16px);*/
     opacity: 0;
-    transition: bottom 0.75s ease-out, transform 0.75s ease-out, opacity 0.2s ease-out;
+    transition: bottom 0.5s ease-out, transform 0.5s ease-out, opacity 0.2s ease-out;
 
     -webkit-overflow-scrolling: touch; /* smoother iOS scroll */
     
@@ -380,6 +381,8 @@ button {
   white-space: pre-wrap;
   font-family: inherit;
   font-size: 0.9rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* Tabs: show only the active tab */
@@ -507,4 +510,29 @@ button {
   object-fit: cover;
   border-radius: 8px;
   margin-top: 0.7rem;
+}
+
+/* Floating 'Go up' button (mobile + desktop) */
+.go-up-btn {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2000;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  background: rgba(34, 34, 34, 0.55);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.22);
+  backdrop-filter: blur(6px);
+}
+.go-up-btn:hover {
+  background: rgba(34, 34, 34, 0.75);
+}
+.go-up-btn:active {
+  transform: translateY(1px);
 }

@@ -106,6 +106,10 @@ const emptyStateEl = document.getElementById("emptyState");
 const searchInputEl = document.getElementById("searchInput");
 const tagListEl = document.getElementById("tagList");
 
+// "Go up" button (mobile helper)
+const goUpBtnEl = document.getElementById("goUpBtn");
+
+
 // Manual extra fields Cook Notes and Image
 const manualNotesEl = document.getElementById("manualNotes");
 const manualImageEl = document.getElementById("manualImage");
@@ -394,11 +398,56 @@ function resizeImageFile(file, maxWidth = 800, quality = 0.7) {
 
 
 
+
+// --- Go up button helpers ---
+function getActiveScrollTarget() {
+  // On mobile, when the detail sheet is open, the recipe panel scrolls.
+  if (
+    window.innerWidth <= 768 &&
+    recipeDetailEl &&
+    recipeDetailEl.classList.contains("sheet-open") &&
+    !recipeDetailEl.classList.contains("hidden")
+  ) {
+    return recipeDetailEl;
+  }
+  return window;
+}
+
+function getScrollTop(target) {
+  if (target === window) {
+    return (
+      document.documentElement.scrollTop ||
+      document.body.scrollTop ||
+      0
+    );
+  }
+  return target.scrollTop || 0;
+}
+
+function updateGoUpVisibility() {
+  if (!goUpBtnEl) return;
+  const target = getActiveScrollTarget();
+  const scrollTop = getScrollTop(target);
+  const threshold = target === window ? window.innerHeight : target.clientHeight;
+
+  goUpBtnEl.classList.toggle("hidden", scrollTop <= threshold);
+}
+
+function scrollToTop() {
+  const target = getActiveScrollTarget();
+  if (target === window) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } else {
+    target.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
 // Render functions
 function render() {
   renderRecipeList();
   renderTagList();
   renderDetail();
+  updateGoUpVisibility();
 }
 
 function renderRecipeList() {
@@ -449,14 +498,10 @@ function renderRecipeList() {
 
       const metaEl = document.createElement("div");
       metaEl.className = "recipe-card-meta";
-      const sourcePart = recipe.source ? `Source: ${recipe.source} · ` : "";
-      const date = new Date(recipe.updatedAt || recipe.createdAt);
-      metaEl.textContent =
-        sourcePart +
-        `Saved: ${date.toLocaleDateString()} ${date.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}`;
+      // Only show source (no saved date/time)
+      if (recipe.source) {
+        metaEl.textContent = `Source: ${recipe.source}`;
+      }
 
       const tagsEl = document.createElement("div");
       tagsEl.className = "recipe-card-tags";
@@ -468,7 +513,7 @@ function renderRecipeList() {
       });
 
       card.appendChild(titleEl);
-      card.appendChild(metaEl);
+      if (recipe.source) card.appendChild(metaEl);
       if ((recipe.tags || []).length > 0) {
         card.appendChild(tagsEl);
       }
@@ -560,15 +605,10 @@ function renderDetail() {
   meta.className = "recipe-detail-meta";
   const lines = [];
   if (recipe.source) lines.push(`Source: ${recipe.source}`);
-  const date = new Date(recipe.updatedAt || recipe.createdAt);
-  lines.push(
-    `Saved: ${date.toLocaleDateString()} ${date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}`
-  );
-  meta.textContent = lines.join(" · ");
-  titleBlock.appendChild(meta);
+  if (lines.length > 0) {
+    meta.textContent = lines.join(" · ");
+    titleBlock.appendChild(meta);
+  }
 
   const tagsDiv = document.createElement("div");
   tagsDiv.className = "recipe-detail-tags";
@@ -840,6 +880,17 @@ async function handleFetchUrl() {
 }
 
 // Event listeners
+
+// Go up button: watch both the window and the mobile detail panel scroll
+if (goUpBtnEl) {
+  goUpBtnEl.addEventListener("click", scrollToTop);
+  window.addEventListener("scroll", updateGoUpVisibility, { passive: true });
+  window.addEventListener("resize", updateGoUpVisibility);
+  if (recipeDetailEl) {
+    recipeDetailEl.addEventListener("scroll", updateGoUpVisibility, { passive: true });
+  }
+}
+
 
 addRecipeBtn.addEventListener("click", () => openModal("manualTab"));
 closeModalBtn.addEventListener("click", closeModal);

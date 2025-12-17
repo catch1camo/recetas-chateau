@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Recetario 6-1</title>
+  <title>Recetario</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 
@@ -40,7 +40,7 @@
 </head>
 <body>
   <header class="app-header">
-    <h1>Recetario 6</h1>
+    <h1>Recetario</h1>
 
     <div class="auth-bar">
       <div id="authLoggedOut">
@@ -98,7 +98,7 @@
   <div id="modalBackdrop" class="modal-backdrop hidden">
     <div class="modal">
       <header class="modal-header">
-        <h2 id="modalTitle">Add / Import Recipe</h2>
+        <h2 id="modalTitle">+ Add</h2>
         <button id="closeModalBtn" class="icon-btn">&times;</button>
       </header>
 
@@ -285,6 +285,9 @@
       </div>
     </div>
   </div>
+
+  <!-- Mobile helper: floating "Go up" button -->
+  <button id="goUpBtn" class="go-up-btn hidden" aria-label="Go to top" title="Go to top">↑</button>
 
   <script src="app.js"></script>
 </body>
