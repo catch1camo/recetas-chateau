@@ -19,7 +19,7 @@ body {
   align-items: center;
   padding: 0.75rem 1rem;
   background: #ffffff;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #d9534f;
   position: sticky;
   top: 0;
   z-index: 10;
