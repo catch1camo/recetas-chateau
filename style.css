@@ -87,10 +87,10 @@ body {
 }
 
 #userMenuBtn svg {
-  width: 28px !important;
-  height: 28px !important;
+  width: 32px !important;
+  height: 32px !important;
   display: block; /* Helps with alignment on mobile */
-  stroke: #222 currentColor; /* Inherits the button's text color */
+  stroke: currentColor; /* Inherits the button's text color */
 }
 
 #userMenuBtn {
@@ -109,8 +109,8 @@ body {
 }
 
 #userMenuBtn i {
-  width: 28px;  /* Adjust size as needed */
-  height: 28px;
+  width: 32px;  /* Adjust size as needed */
+  height: 32px;
   color: #222;
   pointer-events: none; /* Crucial: clicks go through to the button */
 }
