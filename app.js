@@ -349,6 +349,100 @@ function autoSplitRecipeText(text) {
 }
 
 
+// Split a .txt recipe into Ingredients / Instructions / Cook notes (and optionally Source).
+// Supports headings like:
+//   Cook notes
+//   Cook notes: something
+//   Ingredients
+//   Instructions
+//   Source
+function splitRecipeTextWithCookNotes(rawText = "") {
+  // Normalize newlines + remove tabs (tabs cause weird rendering)
+  const text = String(rawText).replace(/\r\n/g, "\n").replace(/\r/g, "\n").replace(/\t/g, "    ");
+
+  const lines = text.split("\n");
+  const out = { ingredients: "", instructions: "", cookNotes: "", source: "" };
+
+  const headingMatchers = [
+    { key: "cookNotes", re: /^\s*(cook\s*notes?|notes?|notas)\s*:?\s*(.*)$/i },
+    { key: "ingredients", re: /^\s*(ingredients?|ingredientes)\s*:?\s*(.*)$/i },
+    { key: "instructions", re: /^\s*(instructions?|directions?|method|preparation|preparaci[oó]n)\s*:?\s*(.*)$/i },
+    { key: "source", re: /^\s*(source|fuente)\s*:?\s*(.*)$/i },
+  ];
+
+  let current = null;
+  const buffers = { ingredients: [], instructions: [], cookNotes: [], source: [] };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    let matched = false;
+    for (const hm of headingMatchers) {
+      const m = line.match(hm.re);
+      if (m) {
+        current = hm.key;
+        matched = true;
+        const inline = (m[2] || "").trim();
+        if (inline) buffers[current].push(inline);
+        break;
+      }
+    }
+    if (matched) continue;
+
+    // If we haven't seen any heading yet, keep collecting (we'll fallback later)
+    if (!current) continue;
+
+    buffers[current].push(line);
+  }
+
+  // Build final strings
+  out.cookNotes = buffers.cookNotes.join("\n").trim();
+  out.ingredients = buffers.ingredients.join("\n").trim();
+  out.instructions = buffers.instructions.join("\n").trim();
+  out.source = buffers.source.join("\n").trim();
+
+  // Fallback: if we couldn't detect headings, use the old splitter
+  if (!out.ingredients && !out.instructions) {
+    const parsed = splitRecipeTextWithCookNotes(text);
+    const ingredients = parsed.ingredients;
+    const instructions = parsed.instructions;
+    const cookNotesText = parsed.cookNotes;
+    const parsedSource = parsed.source;
+
+    // Some exports repeat the title inside the body; remove those stray lines
+    const cleanIngredients = removeStandaloneTitleLines(ingredients, title);
+    const cleanInstructions = removeStandaloneTitleLines(instructions, title);
+    const cleanCookNotes = removeStandaloneTitleLines(cookNotesText, title);
+    out.ingredients = (ingredients || "").trim();
+    out.instructions = (instructions || "").trim();
+
+    // Try to pull cook notes if a heading exists above ingredients
+    const notesMatch = text.match(/\n\s*(cook\s*notes?|notes?|notas)\s*:?\s*\n([\s\S]*?)\n\s*(ingredients?|ingredientes)\s*:?\s*\n/i);
+    if (notesMatch) out.cookNotes = (notesMatch[2] || "").trim();
+  }
+
+  // Clean up: If Source accidentally ended up inside instructions (common in some imports), strip it.
+  if (out.instructions) {
+    out.instructions = out.instructions.replace(/\n\s*(source|fuente)\s*:?\s*[\s\S]*$/i, "").trim();
+  }
+
+  return out;
+}
+
+
+function removeStandaloneTitleLines(sectionText = "", title = "") {
+  const t = String(title || "").trim();
+  if (!t) return String(sectionText || "").trim();
+  return String(sectionText || "")
+    .split("\n")
+    .filter((ln) => ln.trim() && ln.trim().toLowerCase() !== t.toLowerCase())
+    .join("\n")
+    .trim();
+}
+
+
+
+
 /**
  * Resize and compress an image file before saving.
  * Returns a Promise that resolves to a base64 data URL.
@@ -555,15 +649,10 @@ function renderDetail() {
   meta.className = "recipe-detail-meta";
   const lines = [];
   if (recipe.source) lines.push(`Source: ${recipe.source}`);
-  const date = new Date(recipe.updatedAt || recipe.createdAt);
-  lines.push(
-    `Saved: ${date.toLocaleDateString()} ${date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}`
-  );
-  meta.textContent = lines.join(" · ");
-  titleBlock.appendChild(meta);
+  if (lines.length) {
+    meta.textContent = lines.join(" · ");
+    titleBlock.appendChild(meta);
+  }
 
   const tagsDiv = document.createElement("div");
   tagsDiv.className = "recipe-detail-tags";
@@ -626,18 +715,6 @@ if (recipe.image) {
   recipeDetailEl.appendChild(img);
 }
 
-// Cook notes (if any)
-if (recipe.cookNotesText) {
-  const notesSection = document.createElement("section");
-  notesSection.className = "recipe-detail-section";
-  const h3 = document.createElement("h3");
-  h3.textContent = "Cook notes";
-  const pre = document.createElement("pre");
-  pre.textContent = recipe.cookNotesText;
-  notesSection.appendChild(h3);
-  notesSection.appendChild(pre);
-  recipeDetailEl.appendChild(notesSection);
-}
 
   // Ingredients/instructions/body sections
   if (recipe.ingredientsText) {
@@ -662,6 +739,19 @@ if (recipe.cookNotesText) {
     section.appendChild(h3);
     section.appendChild(pre);
     recipeDetailEl.appendChild(section);
+  }
+
+  // Cook notes (if any) - keep at end
+  if (recipe.cookNotesText) {
+    const notesSection = document.createElement("section");
+    notesSection.className = "recipe-detail-section";
+    const h3 = document.createElement("h3");
+    h3.textContent = "Cook notes";
+    const pre = document.createElement("pre");
+    pre.textContent = recipe.cookNotesText;
+    notesSection.appendChild(h3);
+    notesSection.appendChild(pre);
+    recipeDetailEl.appendChild(notesSection);
   }
 
   if (recipe.body && !recipe.ingredientsText && !recipe.instructionsText) {
@@ -713,7 +803,7 @@ function openModal(tabId = "manualTab", recipeToEdit = null) {
       manualImageEl.value = ""; // clear file input (browsers don't allow preset)
     }
   } else {
-    document.getElementById("modalTitle").textContent = "+ Add";
+    document.getElementById("modalTitle").textContent = "Add / Import Recipe";
     delete manualForm.dataset.editId;
   }
 
@@ -886,7 +976,7 @@ manualForm.addEventListener("submit", async (e) => {
           tags,
           ingredientsText,
           instructionsText,
-          cookNotesText,
+          cookNotesText: cleanCookNotes,
           // if imageValue is null, keep existing image
           image: imageValue !== null ? imageValue : existing.image || "",
           updatedAt: now,
@@ -901,7 +991,7 @@ manualForm.addEventListener("submit", async (e) => {
         tags,
         ingredientsText,
         instructionsText,
-        cookNotesText,
+        cookNotesText: cleanCookNotes,
         image: imageValue || "",  // base64 data URL or empty string
         body: "",
         createdAt: now,
@@ -1036,16 +1126,20 @@ fileForm.addEventListener("submit", async (e) => {
     const text = await file.text();
     const title = file.name.replace(/\.[^.]+$/, "") || "(Untitled file)";
 
-    const { ingredients, instructions } = autoSplitRecipeText(text);
+    const parsed = splitRecipeTextWithCookNotes(text);
+    const ingredients = parsed.ingredients;
+    const instructions = parsed.instructions;
+    const cookNotesText = parsed.cookNotes;
+    const parsedSource = parsed.source;
 
     const recipe = {
       id: null,
       title,
-      source: "Imported text file",
+      source: parsedSource || "Imported text file",
       tags: [],
-      ingredientsText: ingredients,
-      instructionsText: instructions,
-      cookNotesText: "",
+      ingredientsText: cleanIngredients,
+      instructionsText: cleanInstructions,
+      cookNotesText: cleanCookNotes,
       image: "",
       body: text,
       createdAt: now,
