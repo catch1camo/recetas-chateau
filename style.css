@@ -400,12 +400,18 @@ button {
 @media (min-width: 901px) {
 
   #recipeDetail {
-    position: relative;
-    top: 64px; /* approx header height; tweak if needed 
-    max-height: calc(100vh - 64px - 1rem);*/
-    height: 100%;
-    overflow-y: auto; /* long recipes scroll inside the panel */
-     border-radius: 0;
+  /*  position: sticky;
+    top: 64px;  approx header height; tweak if needed 
+    max-height: calc(100vh - 64px - 1rem);
+    height: 100%;*/
+  /*  overflow-y: auto;  long recipes scroll inside the panel 
+    border-radius: 0;*/
+
+    position: relative; /* Return to standard side-by-side */
+    bottom: 0;
+    max-height: none;
+    opacity: 1;
+    box-shadow: none;
   }
 }
 
