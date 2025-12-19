@@ -247,7 +247,7 @@ async function loadRecipesFromCloud() {
 
   // On mobile (or narrow screens), start with list only (no auto-open detail)
 if (!activeRecipeId && recipes.length > 0) {
-  if (window.innerWidth > 768) {
+  if (window.innerWidth > 900) {
     activeRecipeId = recipes[0].id; // desktop default
   } else {
     activeRecipeId = null; // mobile: keep closed
@@ -432,7 +432,7 @@ function resizeImageFile(file, maxWidth = 800, quality = 0.7) {
 function getActiveScrollTarget() {
   // On mobile, when the detail sheet is open, the recipe panel scrolls.
   if (
-    window.innerWidth <= 768 &&
+    window.innerWidth <= 900 &&
     recipeDetailEl &&
     recipeDetailEl.classList.contains("sheet-open") &&
     !recipeDetailEl.classList.contains("hidden")

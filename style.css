@@ -138,25 +138,12 @@ body {
     background: #d2d2d2;
 }
 
-
 .app-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
   min-height: calc(100vh - 54px);
 }
 
-/* change 9:07
-@media (max-width: 800px) {
-  .app-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    border-right: none;
-    border-bottom: 1px solid #ddd;
-  }
-}
-*/
 .sidebar {
   background: #fafafa;
   border-right: 1px solid #ddd;
@@ -311,8 +298,8 @@ button {
     /* Smoother animation 
     transform: translateY(16px);*/
     opacity: 0;
-    transition: bottom 0.5s ease-out, transform 0.5s ease-out, opacity 0.2s ease-out;
-    -webkit-overflow-scrolling: touch; /* smoother iOS scroll */
+    transition: bottom 0.5s ease-out, opacity 0.2s ease-out;
+    /*-webkit-overflow-scrolling: touch;  smoother iOS scroll */
     
   }
 
