@@ -19,7 +19,7 @@ body {
   align-items: center;
   padding: 0.75rem 1rem;
   background: #eee;
-  border-bottom: 1px solid #7a36e7;
+  border-bottom: 1px solid #ddd;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -266,13 +266,9 @@ button {
 }
 
 @media (max-width: 900px) {
-  .content {
+ .content {
     grid-template-columns: 1fr;
   }
-}
-
-@media (max-width: 768px) {
-
   /* user button change size from desktop */
   #userMenuBtn i {
     width: 30px;  /* Adjust size as needed */
@@ -298,14 +294,6 @@ button {
 
   /* Turn the detail panel into a full-screen overlay on mobile */
   #recipeDetail {
-    
-    /* Smoother animation 
-    transform: translateY(16px);*/
-    opacity: 0;
-    transition: bottom 0.5s ease-out, transform 0.5s ease-out, opacity 0.2s ease-out;
-
-    -webkit-overflow-scrolling: touch; /* smoother iOS scroll */
-    
     position: fixed;
     left: 0;
     right: 0;
@@ -318,6 +306,12 @@ button {
     overflow-y: auto;           /* 🔹 THIS makes long recipes scrollable */
     z-index: 1000;
     /* transition: bottom 0.25s ease-out; */
+    
+    /* Smoother animation 
+    transform: translateY(16px);*/
+    opacity: 0;
+    transition: bottom 0.5s ease-out, transform 0.5s ease-out, opacity 0.2s ease-out;
+    -webkit-overflow-scrolling: touch; /* smoother iOS scroll */
     
   }
 
@@ -415,14 +409,8 @@ button {
 /* Detail */
 
 /* NEW U/X – desktop behaviour for the detail panel */
-@media (min-width: 769px) {
-  /*#recipeDetail {
-    position: static;
-    max-height: none;
-    overflow: visible;
-    box-shadow: none;
-    border-radius: 0;
-  } */
+@media (min-width: 901px) {
+
   #recipeDetail {
     position: sticky;
     top: 64px; /* approx header height; tweak if needed */
