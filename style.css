@@ -191,12 +191,12 @@ body {
   background: #e0e0e0;
   font-size: 0.8rem;
   cursor: pointer;
-  /* color: #222 !important; */
+  color: #222 !important;
 }
 
 .tag-pill.active {
   background: #222;
-  color: white;
+  color: white !important;
 }
 
 .import-hint {
