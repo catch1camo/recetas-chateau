@@ -254,7 +254,12 @@ button {
 }
 
 @media (max-width: 900px) {
- .content {
+  /* Make main area relative so the overlay layering behaves nicely */
+  .app-layout {
+    display: block;
+  }
+  
+  .content {
     grid-template-columns: 1fr;
   }
   /* user button change size from desktop */
@@ -274,10 +279,6 @@ button {
 
   .mobile-only-close {
     display: inline-block;
-  }
-   /* Make main area relative so the overlay layering behaves nicely */
-  .app-layout {
-    display: block;
   }
 
   /* Turn the detail panel into a full-screen overlay on mobile */
@@ -306,8 +307,8 @@ button {
  /* When JS adds .sheet-open → slide up */
   #recipeDetail.sheet-open {
     bottom: 0;
-    /* Smoother animation */
-    transform: translateY(0);
+    /* Smoother animation 
+    transform: translateY(0);*/
     opacity: 1;
   }
 
@@ -399,6 +400,15 @@ button {
 /* NEW U/X – desktop behaviour for the detail panel */
 @media (min-width: 901px) {
 
+  .app-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr; /* Re-enable sidebar */
+  }
+
+  .content {
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr); /* Re-enable recipe list + detail side-by-side */
+  }
+  
   #recipeDetail {
   /*  position: sticky;
     top: 64px;  approx header height; tweak if needed 
@@ -407,9 +417,9 @@ button {
   /*  overflow-y: auto;  long recipes scroll inside the panel 
     border-radius: 0;*/
 
-    position: relative; /* Return to standard side-by-side */
-    bottom: 0;
-    max-height: none;
+    position: relative;
+    top: 0;
+    height: auto;
     opacity: 1;
     box-shadow: none;
   }
