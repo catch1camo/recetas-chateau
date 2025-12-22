@@ -1,12 +1,6 @@
-// Simple recipe app BASE64 img
+// Simple recipe app BASE64 img - 8.3
 
-// Optional debug 
-console.log("app.js loaded");
-// Debug: see what Firebase apps exist at this point
-console.log("firebase present?", typeof firebase !== "undefined");
-console.log("firebase.apps before init in app.js:", firebase.apps);
-
-// Ensure Firebase app is initialized (defensive)
+// Firebase app is initialized (defensive)
 if (!firebase.apps || firebase.apps.length === 0) {
   // SAME config used in index.html
   const firebaseConfig = {
@@ -20,7 +14,6 @@ if (!firebase.apps || firebase.apps.length === 0) {
   };
 
   firebase.initializeApp(firebaseConfig);
-  console.log("Initialized Firebase app from app.js");
 }
 
 // Firebase handles
@@ -99,7 +92,6 @@ auth.onAuthStateChanged(async (user) => {
   }
 });
 
-
 // DOM elements
 const addRecipeBtn = document.getElementById("addRecipeBtn");
 const recipeListEl = document.getElementById("recipeList");
@@ -118,13 +110,6 @@ userMenuBtn.addEventListener("click", (e) => {
   userDropdown.classList.toggle("hidden");
 });
 
-// user button Close dropdown when clicking anywhere else "old click outside"
-//window.addEventListener("click", () => {
-//  if (userDropdown && !userDropdown.classList.contains("hidden")) {
-//    userDropdown.classList.add("hidden");
-//  }
-//});
-
 // Improved Click-Outside Logic for Desktop & Mobile "new click outside"
 document.addEventListener("click", (e) => {
   const isClickInside = userMenuBtn.contains(e.target) || userDropdown.contains(e.target);
@@ -134,10 +119,8 @@ document.addEventListener("click", (e) => {
   }
 });
 
-
 // "Go up" button (mobile helper)
 const goUpBtnEl = document.getElementById("goUpBtn");
-
 
 // Manual extra fields Cook Notes and Image
 const manualNotesEl = document.getElementById("manualNotes");
@@ -185,26 +168,6 @@ const textBodyEl = document.getElementById("textBody");
 
 // File fields
 const fileInputEl = document.getElementById("fileInput");
-
-/* DEL FOR FIREBASE
-// Load & save helpers
-function loadRecipes() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return [];
-  try {
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) return parsed;
-    return [];
-  } catch (e) {
-    console.error("Error parsing recipes from localStorage", e);
-    return [];
-  }
-}
-
-function saveRecipes() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
-}
-*/
 
 // Normalize tags from comma-separated string
 function parseTags(tagString) {
@@ -381,7 +344,6 @@ function autoSplitRecipeText(text) {
   return { ingredients, instructions };
 }
 
-
 /**
  * Resize and compress an image file before saving.
  * Returns a Promise that resolves to a base64 data URL.
@@ -424,9 +386,6 @@ function resizeImageFile(file, maxWidth = 800, quality = 0.7) {
     reader.readAsDataURL(file);
   });
 }
-
-
-
 
 // --- Go up button helpers ---
 function getActiveScrollTarget() {
@@ -920,7 +879,6 @@ if (goUpBtnEl) {
   }
 }
 
-
 addRecipeBtn.addEventListener("click", () => openModal("manualTab"));
 closeModalBtn.addEventListener("click", closeModal);
 
@@ -1148,7 +1106,6 @@ fileForm.addEventListener("submit", async (e) => {
   render();
   closeModal();
 });
-
 
 // Init
 

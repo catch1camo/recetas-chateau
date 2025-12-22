@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Recetario</title>
+  <title>Recetario 8.3</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 
@@ -12,13 +12,12 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
-
   <!-- Firebase SDK script -->
   <script>
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
 
-    // Your web app's Firebase configuration
+    // Web app's Firebase configuration
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
       apiKey: "AIzaSyCst_sQ3u3K3B6Hz5xS2kIQrQrUVQTKuy4",
@@ -32,9 +31,7 @@
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-        
-    // Optional debug
-    console.log("Firebase apps after init:", firebase.apps);
+
   </script>
 
   <!-- Icons -->
@@ -43,7 +40,7 @@
 </head>
 <body>
   <header class="app-header">
-    <h1>Recetari8.27</h1>
+    <h1><i data-lucide="chef-hat"></i> Recetari8.3</h1>
 
     <div class="auth-bar">
       <div id="authLoggedOut">
@@ -120,6 +117,7 @@
       </div>
 
       <div class="modal-body">
+
         <!-- Manual tab -->
         <div id="manualTab" class="tab-content active">
           <form id="manualForm" class="form">
@@ -145,8 +143,8 @@
                 id="manualIngredients"
                 rows="5"
                 placeholder="- 200 g pasta
-- 2 tbsp olive oil
-- 1 clove garlic"
+                  - 2 tbsp olive oil
+                  - 1 clove garlic"
               ></textarea>
             </label>
             <label>
@@ -155,7 +153,7 @@
                 id="manualInstructions"
                 rows="7"
                 placeholder="1. Boil water.
-2. Cook pasta until al dente."
+                  2. Cook pasta until al dente."
               ></textarea>
             </label>
             <!-- NEW: Cook notes -->
@@ -300,5 +298,6 @@
   <button id="goUpBtn" class="go-up-btn hidden" aria-label="Go to top" title="Go to top">↑</button>
 
   <script src="app.js"></script>
+
 </body>
 </html>
