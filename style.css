@@ -3,7 +3,7 @@
 *::after {
   box-sizing: border-box;
 }
-/* 8.3 */
+/* 8.4 */
 body {
   margin: 0;
   overflow-x: hidden;
@@ -387,24 +387,38 @@ button {
 
 /* Detail */
 
-/* NEW U/X – desktop behaviour for the detail panel */
+/* U/X – desktop behaviour for the detail panel */
 @media (min-width: 901px) {
 
   .app-layout {
     display: grid;
     grid-template-columns: 260px 1fr; /* Re-enable sidebar */
+    /* Prevent the whole body from growing infinitely */
+    height: calc(100vh - 60px); 
+    overflow: hidden;
   }
 
   .content {
-    grid-template-columns: minmax(0, 320px) minmax(0, 1fr); /* Re-enable recipe list + detail side-by-side */
+    display: grid;
+    /* Re-enable recipe list + detail side-by-side */
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    height: 100%;
+    overflow: hidden;
   }
   
+  .recipe-list,
+  #recipeDetail {
+    height: 100%;
+    overflow-y: auto;
+    /* padding: 1rem; THIS change to do? */
+  }
+
+
   #recipeDetail {
     position: relative;
-    top: 0;
-    height: auto;
     opacity: 1;
     box-shadow: none;
+    background: #d9534f; /* THIS change to do? */
   }
 }
 

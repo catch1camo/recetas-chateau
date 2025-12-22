@@ -1,4 +1,4 @@
-// Simple recipe app BASE64 img - 8.3
+// Simple recipe app BASE64 img - 8.4
 
 // Firebase app is initialized (defensive)
 if (!firebase.apps || firebase.apps.length === 0) {
@@ -564,6 +564,9 @@ function renderDetail() {
     recipeDetailEl.innerHTML = "";
     return;
   }
+
+  // NEW Recipe on top of viewport (Desktop)
+  recipeDetailEl.scrollTop = 0;
 
   document.body.classList.add("detail-open"); // NEW U/X
 
