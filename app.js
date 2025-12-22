@@ -193,34 +193,15 @@ async function loadRecipesFromCloud() {
     .orderBy("updatedAt", "desc")
     .get();
 
-  // Old Search duplicates
-  // recipes = snap.docs.map((doc) => ({
-  //  id: doc.id,
-  //  ...doc.data(),
-  //}));
-
-  // Solve Search Duplicates
-  // Map the documents to an array
-    const freshRecipes = snap.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-
-  // Use a Map to ensure unique IDs (just in case Firestore listeners double-fire)
-    const uniqueMap = new Map();
-    freshRecipes.forEach(r => uniqueMap.set(r.id, r));
-  
-  // Replace the global recipes array with unique values only
-    recipes = Array.from(uniqueMap.values());
+  recipes = snap.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 
   // Firestore stores timestamps as objects; convert if needed
   recipes.forEach((r) => {
-    if (r.createdAt && r.createdAt.toMillis) {
-      r.createdAt = r.createdAt.toMillis();
-    }
-    if (r.updatedAt && r.updatedAt.toMillis) {
-      r.updatedAt = r.updatedAt.toMillis();
-    }
+    if (r.createdAt && r.createdAt.toMillis) r.createdAt = r.createdAt.toMillis();
+    if (r.updatedAt && r.updatedAt.toMillis) r.updatedAt = r.updatedAt.toMillis();
   });
 
   // On mobile (or narrow screens), start with list only (no auto-open detail)
