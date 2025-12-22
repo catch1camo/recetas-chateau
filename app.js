@@ -1,4 +1,4 @@
-// Simple recipe app BASE64 img - 8.4
+// Simple recipe app BASE64 img - 8.5
 
 // Firebase app is initialized (defensive)
 if (!firebase.apps || firebase.apps.length === 0) {
@@ -193,10 +193,25 @@ async function loadRecipesFromCloud() {
     .orderBy("updatedAt", "desc")
     .get();
 
-  recipes = snap.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+  // Old Search duplicates
+  // recipes = snap.docs.map((doc) => ({
+  //  id: doc.id,
+  //  ...doc.data(),
+  //}));
+
+  // Solve Search Duplicates
+  // Map the documents to an array
+    const freshRecipes = snap.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+  // Use a Map to ensure unique IDs (just in case Firestore listeners double-fire)
+    const uniqueMap = new Map();
+    freshRecipes.forEach(r => uniqueMap.set(r.id, r));
+  
+  // Replace the global recipes array with unique values only
+    recipes = Array.from(uniqueMap.values());
 
   // Firestore stores timestamps as objects; convert if needed
   recipes.forEach((r) => {
