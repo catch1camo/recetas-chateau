@@ -3,14 +3,39 @@
 *::after {
   box-sizing: border-box;
 }
-/* 8.7 */
+
+/* 8.7.1 */
+
+:root {
+  /* Sage palette */
+  --bg: #FAFAF7;
+  --surface: #FFFFFF;
+  --surface-2: #FAFAF7;
+  --text: #2B2B2B;
+  --text-muted: #6B6B6B;
+  --border: #E5E5E0;
+  --header: #3D562F;
+  
+  --accent: #6B8F71;       /* sage */
+  --accent-hover: #55745A; /* dark sage */
+  --accent-soft: #EEF4EF;  /* very light sage */
+
+  --btn-secondary: #E9ECE7;
+  --btn-secondary-hover: #DDE3DC;
+
+  --danger: #D9534F;
+  --danger-hover: #C64541;
+
+  --shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
 body {
   margin: 0;
   overflow-x: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  background: #f4f4f4;
-  color: #222;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .app-header {
@@ -18,8 +43,8 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
-  background: #eee;
-  border-bottom: 1px solid #ddd;
+  background: var(--border); /* CHG PALLETTE --surface-2 */
+  /*border-bottom: 1px solid var(--border);  CHG PALLETTE */
   position: sticky;
   top: 0;
   z-index: 10;
@@ -27,6 +52,7 @@ body {
 
 .app-header h1 {
   margin: 0;
+  color: var(--header); /* CHG PALLETTE New */
   font-size: 1.4rem;
   display: flex;
   align-items: center;
@@ -44,12 +70,12 @@ body {
   padding: 0.2rem 0.4rem;
   font-size: 0.8rem;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border);
 }
 
 #authUserEmail {
   font-size: 0.8rem;
-  color: #555;
+  color: var(--text-muted);
 }
 
 /* Auth bar User Menu Dropdown Styles */
@@ -62,10 +88,10 @@ body {
   position: absolute;
   right: 0;
   top: 110%;
-  background: white;
+  background: var(--surface);
   min-width: 180px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.75rem;
   z-index: 100;
@@ -76,14 +102,14 @@ body {
 
 .user-dropdown hr {
   border: 0;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border);
   margin: 0.2rem 0;
 }
 
 #authUserEmail {
   /* font-weight: 600; */
   font-size: 0.8rem;
-  color: #222;
+  color: var(--text);
   word-break: break-all;
 }
 
@@ -99,7 +125,7 @@ body {
   padding: 0.2rem;
   border-radius: 50%; 
 
-  color: #222 !important; /* Force text/icon color */
+  color: var(--text) !important; /* Force text/icon color */
   -webkit-tap-highlight-color: transparent; /* Removes the blue flash when tapping */
 
   transition: background 0.2s;
@@ -108,7 +134,7 @@ body {
 #userMenuBtn i {
   width: 28px;  /* Adjust size as needed */
   height: 28px;
-  color: #222 !important;
+  color: var(--text) !important;
   pointer-events: none; /* Crucial: clicks go through to the button */
 }
 
@@ -120,7 +146,7 @@ body {
 }
 
 #userMenuBtn:hover {
-  background: #ddd;
+  background: var(--btn-secondary-hover);
 }
 
 .userlogoutBtn {
@@ -130,12 +156,12 @@ body {
   margin: 0 auto 0.5rem auto;
   padding: 0.3rem 0.6rem;
   font-size: 0.8rem;
-  background: #e4e4e4;
-  color: #222;
+  background: var(--btn-secondary);
+  color: var(--text);
 }
 
 .userlogoutBtn:hover {
-    background: #d2d2d2;
+    background: var(--btn-secondary-hover);
 }
 
 .app-layout {
@@ -145,8 +171,8 @@ body {
 }
 
 .sidebar {
-  background: #fafafa;
-  border-right: 1px solid #ddd;
+  background: var(--surface-2);
+  border-right: 1px solid var(--border);
   padding: 1rem;
 }
 
@@ -154,7 +180,7 @@ body {
   width: 100%;
   padding: 0.2rem 0.4rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border);
   font-size: 16px /*0.9rem*/;
 }
 
@@ -176,21 +202,21 @@ body {
 .tag-pill {
   padding: 0.2rem 0.5rem;
   border-radius: 999px;
-  background: #e0e0e0;
+  background: var(--btn-secondary);
   font-size: 0.8rem;
   cursor: pointer;
-  color: #222 !important;
+  color: var(--text) !important;
 }
 
 .tag-pill.active {
-  background: #222;
-  color: white !important;
+  background: var(--accent);
+  color: #fff !important;
 }
 
 .import-hint {
   margin-top: 1.5rem;
   font-size: 0.85rem;
-  color: #555;
+  color: var(--text-muted);
 }
 
 .import-hint ul {
@@ -216,22 +242,22 @@ button {
 
 #addRecipeBtn,
 .primary-btn {
-  background: #222;
+  background: var(--accent);
   color: #fff;
 }
 
 #addRecipeBtn:hover,
 .primary-btn:hover {
-  opacity: 0.8;
+  background: var(--accent-hover);
 }
 
 .secondary-btn {
-  background: #e4e4e4;
-  color: #222;
+  background: var(--btn-secondary);
+  color: var(--text);
 }
 
 .secondary-btn:hover {
-  background: #d2d2d2;
+  background: var(--btn-secondary-hover);
 }
 
 .icon-btn {
@@ -266,7 +292,7 @@ button {
   #userMenuBtn i {
     width: 30px;  /* Adjust size as needed */
     height: 30px;
-    color: #222;
+    color: var(--text);
     pointer-events: none; /* Crucial: clicks go through to the button */
   }
 
@@ -288,7 +314,7 @@ button {
     right: 0;
     bottom: -100%;              /* hidden off-screen */
     max-height: 85vh;           /* leave some space above */
-    background: #ffffff;
+    background: var(--surface);
     box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.25);
     border-radius: 16px 16px 0 0;
     padding: 0.75rem 1rem 1rem;
@@ -319,8 +345,8 @@ button {
     padding: 0.4rem 0.8rem;
     font-size: 0.85rem;
     border-radius: 999px;
-    border: 1px solid #ccc;
-    background: #f5f5f5;
+    border: 1px solid var(--border);
+    background: var(--btn-secondary);
   }
 
   /* Optional: prevent background scroll when sheet is open */
@@ -337,17 +363,17 @@ button {
 }
 
 .recipe-card {
-  background: #ffffff;
+  background: var(--surface);
   border-radius: 8px;
   padding: 0.6rem 0.8rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--border);
   cursor: pointer;
   transition: box-shadow 0.1s ease, transform 0.05s ease;
 }
 
 .recipe-card:hover {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  background-color: #9eee93;
+  box-shadow: var(--shadow);
+  background-color: var(--accent-soft);
   /* transform: ;  translateY(-1px) */
 }
 
@@ -358,7 +384,7 @@ button {
 
 .recipe-card-meta {
   font-size: 0.8rem;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .recipe-card-tags {
@@ -369,15 +395,16 @@ button {
 }
 
 .recipe-card-tag {
-  background: #f0f0f0;
+  background: var(--accent-soft);
+  color: var(--accent-hover);
   border-radius: 999px;
   padding: 0.1rem 0.4rem;
   font-size: 0.75rem;
 }
 
 .recipe-card.active {
-  background-color: #dbf4d8;        /* subtle highlight */
-  border-left: 4px solid #9eee93;   /* accent color */
+  background-color: var(--accent-soft);        /* subtle highlight */
+  border-left: 4px solid var(--accent);   /* accent color */
 }
 
 /* Optional: smoother feel */
@@ -389,7 +416,7 @@ button {
   grid-column: 1 / -1;
   margin-top: 2rem;
   text-align: center;
-  color: #777;
+  color: var(--text-muted);
 }
 
 .hidden {
@@ -439,10 +466,10 @@ button {
 }
 
 .recipe-detail {
-  background: #ffffff;
+  background: var(--surface);
   border-radius: 8px;
   padding: 0.9rem 1rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--border);
   align-self: start;
 }
 
@@ -460,7 +487,7 @@ button {
 
 .recipe-detail-meta {
   font-size: 0.85rem;
-  color: #666;
+  color: var(--text-muted);
   margin-top: 0.25rem;
 }
 
@@ -512,7 +539,7 @@ button {
 }
 
 .modal {
-  background: #ffffff;
+  background: var(--surface);
   border-radius: 10px;
   max-width: 700px;
   width: 100%;
@@ -523,7 +550,7 @@ button {
 
 .modal-header {
   padding: 0.6rem 0.9rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -536,7 +563,7 @@ button {
 
 .modal-tabs {
   display: flex;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border);
 }
 
 .tab-btn {
@@ -549,7 +576,7 @@ button {
 }
 
 .tab-btn.active {
-  border-bottom-color: #222;
+  border-bottom-color: var(--text);
   font-weight: 600;
 }
 
@@ -570,7 +597,7 @@ button {
   width: 100%;
   padding: 0.4rem 0.55rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border);
   font-size: 0.9rem;
 }
 
@@ -588,7 +615,7 @@ button {
 
 .hint {
   font-size: 0.8rem;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .recipe-actions {
@@ -621,7 +648,7 @@ button {
 }
 
 .danger-btn {
-  background: #d9534f;
+  background: var(--danger);
   color: #fff;
   border-radius: 999px;
   padding: 0.35rem 0.7rem;
@@ -629,7 +656,7 @@ button {
 }
 
 .danger-btn:hover {
-  opacity: 0.9;
+  background: var(--danger-hover);
 }
 
 .recipe-image {
@@ -653,16 +680,25 @@ button {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  background: rgba(34, 34, 34, 0.55);
+  background: rgba(107, 143, 113, 0.65);
   color: #fff;
   box-shadow: 0 6px 16px rgba(0,0,0,0.22);
   backdrop-filter: blur(6px);
 }
 
 .go-up-btn:hover {
-  background: rgba(34, 34, 34, 0.75);
+  background: rgba(107, 143, 113, 0.85);
 }
 
 .go-up-btn:active {
   transform: translateY(1px);
+}
+
+/* Focus ring (keyboard + accessibility) */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+.tab-btn:focus-visible {
+  outline: 3px solid rgba(107, 143, 113, 0.35);
+  outline-offset: 2px;
 }

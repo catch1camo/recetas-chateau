@@ -1,4 +1,4 @@
-// Simple recipe app BASE64 img - 8.7
+// Simple recipe app BASE64 img - 8.7.1
 
 // Firebase app is initialized (defensive)
 if (!firebase.apps || firebase.apps.length === 0) {
