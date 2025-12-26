@@ -1,4 +1,4 @@
-// Simple recipe app BASE64 img - .8.7.2
+// Simple recipe app BASE64 img - .8.8.2
 
 // Firebase app is initialized (defensive)
 if (!firebase.apps || firebase.apps.length === 0) {
@@ -643,6 +643,22 @@ function scrollToTop() {
   }
 }
 
+// Recipe count function
+function updateRecipeCount(filteredCount, totalCount) {
+  const el = document.getElementById("recipeCount");
+  if (!el) return;
+
+  const hasSearch = searchInputEl.value.trim().length > 0;
+  const hasTag = !!activeTagFilter;
+  const isFiltered = hasSearch || hasTag;
+
+  if (isFiltered) {
+    el.textContent = `${filteredCount} of ${totalCount} RECIPES`;
+  } else {
+    el.textContent = `${totalCount} RECIPES`;
+  }
+}
+
 // Render functions
 function render() {
   renderRecipeList();
@@ -673,6 +689,8 @@ function renderRecipeList() {
       (r.body || "");
     return haystack.toLowerCase().includes(query);
   });
+
+  updateRecipeCount(filtered.length, recipes.length);
 
   recipeListEl.innerHTML = "";
 

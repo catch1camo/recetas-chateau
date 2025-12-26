@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-/* .8.7.2 */
+/* .8.8.2 */
 
 :root {
   /* Sage palette */
@@ -181,7 +181,13 @@ body {
   padding: 0.2rem 0.4rem;
   border-radius: 6px;
   border: 1px solid var(--border);
-  font-size: 16px /*0.9rem*/;
+  font-size: 16px; /*0.9rem => change size to 16px to avoid iOS zoom in */
+}
+
+.recipe-count {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin: 12px 0px 0px 2px;
 }
 
 .tag-block {
@@ -481,7 +487,7 @@ button {
 }
 
 .recipe-detail h2 {
-  margin: 0;
+  margin: -14px 0 0 0; /* Recipes detail page title a bit moved up */
   font-size: 1.2rem;
 }
 
@@ -598,7 +604,7 @@ button {
   padding: 0.4rem 0.55rem;
   border-radius: 6px;
   border: 1px solid var(--border);
-  font-size: 16px; /* 0.9rem */
+  font-size: 16px; /* 0.9rem => change size to 16px to avoid iOS zoom in */
 }
 
 .form textarea {
