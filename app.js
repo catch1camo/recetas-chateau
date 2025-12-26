@@ -1,4 +1,4 @@
-// Simple recipe app BASE64 img - 8.7.1
+// Simple recipe app BASE64 img - .8.7.2
 
 // Firebase app is initialized (defensive)
 if (!firebase.apps || firebase.apps.length === 0) {
@@ -834,17 +834,23 @@ function renderDetail() {
 
   const actions = document.createElement("div");
   actions.className = "recipe-actions top";
+
+  // Icon circle buttons (Lucide)
   const editBtn = document.createElement("button");
-  editBtn.className = "secondary-btn";
-  editBtn.textContent = "Edit";
+  editBtn.className = "icon-circle-btn";
+  editBtn.title = "Edit";
+  editBtn.setAttribute("aria-label", "Edit");
+  editBtn.innerHTML = '<i data-lucide="square-pen"></i>';
   editBtn.addEventListener("click", () => {
     openModal("manualTab", recipe);
   });
 
   const deleteBtn = document.createElement("button");
-  deleteBtn.className = "danger-btn";
-  deleteBtn.textContent = "Delete";
-  
+  deleteBtn.className = "icon-circle-btn danger";
+  deleteBtn.title = "Delete";
+  deleteBtn.setAttribute("aria-label", "Delete");
+  deleteBtn.innerHTML = '<i data-lucide="trash-2"></i>';
+
   deleteBtn.addEventListener("click", async () => {
     if (!confirm("Delete this recipe?")) return;
     await deleteRecipeFromCloud(recipe.id);
@@ -853,20 +859,21 @@ function renderDetail() {
     render();
   });
 
-  // NEW U/X close btn
   const closeDetailBtn = document.createElement("button");
-  closeDetailBtn.className = "secondary-btn mobile-only-close";
-  closeDetailBtn.textContent = "Close"; // Close Icon
-  
+  closeDetailBtn.className = "icon-circle-btn mobile-only-close";
+  closeDetailBtn.title = "Close";
+  closeDetailBtn.setAttribute("aria-label", "Close");
+  closeDetailBtn.innerHTML = '<i data-lucide="x"></i>';
+
   closeDetailBtn.addEventListener("click", () => {
     activeRecipeId = null;
-    clearActiveRecipeCard();   // clear active recipe highlight state
+    clearActiveRecipeCard();
     render(); // this will also remove body.detail-open via renderDetail
   });
 
   actions.appendChild(editBtn);
   actions.appendChild(deleteBtn);
-  actions.appendChild(closeDetailBtn); // NEW U/X
+  actions.appendChild(closeDetailBtn);
 
   header.appendChild(actions);
   header.appendChild(titleBlock);
@@ -940,6 +947,8 @@ if (recipe.image) {
     recipeDetailEl.classList.remove("sheet-open");
     document.body.classList.remove("detail-open");
   }
+
+lucide.createIcons();
 
 }
 

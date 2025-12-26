@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-/* 8.7.1 */
+/* .8.7.2 */
 
 :root {
   /* Sage palette */
@@ -14,8 +14,8 @@
   --text: #2B2B2B;
   --text-muted: #6B6B6B;
   --border: #E5E5E0;
-  --header: #3D562F;
-  
+  --header: #3D562F; /* title color */
+
   --accent: #6B8F71;       /* sage */
   --accent-hover: #55745A; /* dark sage */
   --accent-soft: #EEF4EF;  /* very light sage */
@@ -166,7 +166,7 @@ body {
 
 .app-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 200px 1fr;
   min-height: calc(100vh - 54px);
 }
 
@@ -403,7 +403,7 @@ button {
 }
 
 .recipe-card.active {
-  background-color: var(--accent-soft);        /* subtle highlight */
+  background-color: var(--accent-soft);   /* subtle highlight */
   border-left: 4px solid var(--accent);   /* accent color */
 }
 
@@ -430,7 +430,7 @@ button {
 
   .app-layout {
     display: grid;
-    grid-template-columns: 260px 1fr; /* Re-enable sidebar */
+    grid-template-columns: 200px 1fr; /* Re-enable sidebar */
     /* Prevent the whole body from growing infinitely */
     height: calc(100vh - 60px); 
     overflow: hidden;
@@ -702,3 +702,56 @@ textarea:focus-visible,
   outline: 3px solid rgba(107, 143, 113, 0.35);
   outline-offset: 2px;
 }
+
+
+/* ===============================
+   Circular Lucide action buttons
+   =============================== */
+.icon-circle-btn{
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  /*border: 1px solid var(--border);*/
+  background: var(--surface);
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  /*box-shadow: var(--shadow);*/
+  transition: background-color 0.15s ease, transform 0.08s ease, border-color 0.15s ease;
+}
+
+.icon-circle-btn:hover{
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+}
+
+.icon-circle-btn:active{
+  transform: scale(0.96);
+}
+
+.icon-circle-btn:focus{
+  outline: none;
+}
+
+.icon-circle-btn:focus-visible{
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.icon-circle-btn svg{
+  width: 18px;
+  height: 18px;
+}
+
+/* Danger variant (Delete) */
+.icon-circle-btn.danger{
+  color: var(--danger);
+}
+
+.icon-circle-btn.danger:hover{
+  background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+  border-color: color-mix(in srgb, var(--danger) 35%, var(--border));
+}
+
